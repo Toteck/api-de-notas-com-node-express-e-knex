@@ -1,4 +1,4 @@
-const { veriry } = require("jsonwebtoken");
+const { verify } = require("jsonwebtoken");
 const AppError = require("../utils/AppError");
 const authConfig = require("../configs/auth");
 
@@ -15,11 +15,11 @@ function ensureAuthenticated(request, response, next) {
   // Verifica se é um token válido
   try {
     // sub: é o id do usuário e por isso eu criei um aliás para ela
-    const { sub: user_id } = veriry(token, authConfig.jwt.secret);
+    const { sub: user_id } = verify(token, authConfig.jwt.secret);
 
     // criando uma propriedade para request
     request.user = {
-      id: Number(user.id),
+      id: Number(user_id),
     };
 
     return next();
