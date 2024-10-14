@@ -1,7 +1,9 @@
 // importação da conexão com o banco de dados
-const knex = require("../database/knex");
 const AppError = require("../utils/AppError");
+const authConfig = require("../configs/auth");
 const { compare } = require("bcryptjs");
+const knex = require("../database/knex");
+const { sign } = require("jsonwebtoken");
 
 class SessionsController {
   async create(request, response) {
@@ -22,7 +24,13 @@ class SessionsController {
       throw new AppError("E-mail e/ou senha incorretos", 401);
     }
 
-    return response.json(user);
+    const { secret, expiresIn } = authConfig.jwt;
+    const token = sign({}, secret, {
+      subject: String(user.id),
+      expiresIn,
+    });
+
+    return response.json({ user, token });
   }
 }
 
