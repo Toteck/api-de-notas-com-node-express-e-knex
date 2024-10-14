@@ -31,7 +31,7 @@ class NotesController {
 
     await knex("tags").insert(tagsInsert);
 
-    response.status(201).json();
+    return response.status(201).json();
   }
 
   async show(request, response) {
