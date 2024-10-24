@@ -36,12 +36,15 @@ class NotesController {
 
   async show(request, response) {
     const { id } = request.params;
+    const [, id_note] = id.split("");
 
-    const note = await knex("notes").where({ id }).first();
-    const tags = await knex("tags").where({ note_id: id }).orderBy("name");
+    const note = await knex("notes").where({ id: id_note }).first();
+    const tags = await knex("tags").where({ note_id: id_note }).orderBy("name");
     const links = await knex("links")
-      .where({ note_id: id })
+      .where({ note_id: id_note })
       .orderBy("created_at");
+
+    console.log({ note });
 
     return response.json({
       ...note,
