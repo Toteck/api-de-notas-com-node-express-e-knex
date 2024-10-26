@@ -36,15 +36,14 @@ class NotesController {
 
   async show(request, response) {
     const { id } = request.params;
-    const [, id_note] = id.split("");
+    const [, id_note] = id.split(":");
+    console.log({ id_note });
 
     const note = await knex("notes").where({ id: id_note }).first();
     const tags = await knex("tags").where({ note_id: id_note }).orderBy("name");
     const links = await knex("links")
       .where({ note_id: id_note })
       .orderBy("created_at");
-
-    console.log({ note });
 
     return response.json({
       ...note,
@@ -55,8 +54,9 @@ class NotesController {
 
   async delete(request, response) {
     const { id } = request.params;
+    const [, id_note] = id.split("");
 
-    await knex("notes").where({ id }).delete();
+    await knex("notes").where({ id: id_note }).delete();
 
     return response.json();
   }
